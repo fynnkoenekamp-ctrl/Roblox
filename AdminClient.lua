@@ -1,19 +1,7 @@
 --[[
 	AdminClient.lua
-	ALL client-side logic for the Admin Panel in a single LocalScript.
+	Client-side logic for the Admin Panel.
 	Place in StarterPlayerScripts.
-
-	Contains (inline):
-		- Tween_Controller
-		- Notification_System
-		- StaleDetector
-		- Command_Palette
-		- UI Components: Sidebar, Topbar, Dashboard, PlayerList, ModerationView,
-		  LogsView, SettingsView, Modal, NotificationCenter
-		- UI_Engine
-		- Entry point / bootstrap
-
-	This replaces the entire StarterPlayerScripts/AdminPanel/ folder.
 ]]
 
 local TweenService = game:GetService("TweenService")
@@ -614,13 +602,11 @@ function Topbar.updatePlayerCount(current: number, max: number)
 end
 
 -- ============================================================================
--- SECTION 7: PLACEHOLDER COMPONENTS (PlayerList, ModerationView,
---            SettingsView, Modal, NotificationCenter, Command_Palette)
--- These are simplified inline versions preserving the public API surface.
--- Full UI construction logic is preserved from the original modules.
+-- SECTION 7: UI COMPONENTS (PlayerList, ModerationView, LogsView,
+--            SettingsView, Modal, NotificationCenter)
 -- ============================================================================
 
--- PlayerList (simplified - creates container frame)
+-- PlayerList
 local PlayerList = {}
 local plAllPlayers: { Shared.PlayerInfo } = {}
 local plScrollFrame: ScrollingFrame? = nil
@@ -682,7 +668,7 @@ function PlayerList.updatePlayers(players: { Shared.PlayerInfo })
 	PlayerList.renderList("", "Moderator", Color3.fromRGB(70, 115, 255), function() end)
 end
 
--- ModerationView (simplified)
+-- ModerationView
 local ModerationView = {}
 function ModerationView.create(parent: GuiObject, accentColor: Color3, onBan: any, onMute: any): Frame
 	local container = Instance.new("Frame"); container.Name = "ModerationView"
@@ -753,7 +739,7 @@ function ModerationView.create(parent: GuiObject, accentColor: Color3, onBan: an
 	return container
 end
 
--- LogsView (simplified)
+-- LogsView
 local LogsView = {}
 function LogsView.create(parent: GuiObject, accentColor: Color3, onPageChange: any, onFilterChange: any): Frame
 	local container = Instance.new("Frame"); container.Name = "LogsView"
@@ -773,7 +759,7 @@ function LogsView.create(parent: GuiObject, accentColor: Color3, onPageChange: a
 	return container
 end
 
--- SettingsView (simplified)
+-- SettingsView
 local SettingsView = {}
 function SettingsView.create(parent: GuiObject, settings: Shared.AdminSettings, accentColor: Color3, onSave: (Shared.AdminSettings) -> ()): Frame
 	local container = Instance.new("Frame"); container.Name = "SettingsView"
@@ -794,7 +780,7 @@ function SettingsView.create(parent: GuiObject, settings: Shared.AdminSettings, 
 	return container
 end
 
--- Modal (simplified)
+-- Modal
 local Modal = {}
 function Modal.create(parent: any): { show: (Shared.ModalConfig, (boolean) -> ()) -> (), hide: () -> () }
 	local backdrop = Instance.new("TextButton"); backdrop.Name = "ModalBackdrop"
@@ -842,7 +828,7 @@ function Modal.create(parent: any): { show: (Shared.ModalConfig, (boolean) -> ()
 	}
 end
 
--- NotificationCenter (simplified)
+-- NotificationCenter
 local NotificationCenter = {}
 function NotificationCenter.create(parent: any, accentColor: Color3, onDismiss: (number) -> (), onMarkAllRead: () -> ()): { frame: Frame, updateNotifications: (any) -> (), show: () -> (), hide: () -> () }
 	local panel = Instance.new("Frame"); panel.Name = "NotificationCenterPanel"
@@ -1013,7 +999,6 @@ end
 
 function CommandPalette.open()
 	cpIsOpen = true
-	-- Minimal implementation - full palette UI would go here
 end
 
 function CommandPalette.close()
@@ -1040,7 +1025,6 @@ local initSuccess, initData = pcall(function()
 end)
 
 if not initSuccess or not initData then
-	-- Not an admin or server error — silently exit
 	return
 end
 

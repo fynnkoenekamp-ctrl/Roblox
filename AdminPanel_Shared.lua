@@ -1,12 +1,7 @@
 --[[
 	AdminPanel_Shared.lua
-	Combined shared module: Types + Constants + Remotes bootstrap.
+	Shared module: Types, Constants, and Remotes bootstrap.
 	Place in ReplicatedStorage as a ModuleScript.
-
-	This single module replaces:
-		- ReplicatedStorage/Shared/Types.lua
-		- ReplicatedStorage/Shared/Constants.lua
-		- ReplicatedStorage/Shared/Remotes.lua
 ]]
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

@@ -1,20 +1,7 @@
 --[[
 	AdminServer.lua
-	ALL server-side logic for the Admin Panel in a single Script.
+	Server-side logic for the Admin Panel.
 	Place in ServerScriptService.
-
-	Contains (inline):
-		- Permission_Service
-		- Security_Service
-		- Rate_Limiter
-		- Log_Service
-		- Moderation_Service
-		- Player_Manager
-		- Settings_Service
-		- Remote_Handler
-		- Entry point / bootstrap
-
-	This replaces the entire ServerScriptService/AdminPanel/ folder.
 ]]
 
 local Players = game:GetService("Players")
@@ -34,10 +21,8 @@ local Constants = Shared.Constants
 
 local PermissionService = {}
 
--- Configure starting admins here. Replace 0 with real UserIds.
--- Example: [12345678] = "Owner",
 local DEFAULT_WHITELIST: { [number]: string } = {
-	 [9600993493] = "Owner",
+	[9600993493] = "Owner",
 }
 
 local whitelist: { [number]: string } = {}
@@ -721,7 +706,6 @@ function PlayerManager.unmute(target: Player): Shared.ActionResult
 	if not isConnected(target) then
 		return { success = false, error = "Target player is no longer connected", errorCode = "target_disconnected" }
 	end
-	-- Clear mute
 	if ModerationService.isMuted(target.UserId) then
 		modMutes[target.UserId] = nil
 		return { success = true, data = { targetUserId = target.UserId, targetUsername = target.Name, action = "unmute" } }
@@ -1266,17 +1250,14 @@ local function onPlayerAdded(player: Player)
 		player:Kick(kickMessage)
 		return
 	end
-	-- Admin detection: session init happens via Panel_Init RemoteFunction
 end
 
 local function onPlayerRemoving(_player: Player)
-	-- Cleanup handled by individual services
 end
 
 Players.PlayerAdded:Connect(onPlayerAdded)
 Players.PlayerRemoving:Connect(onPlayerRemoving)
 
--- Handle players who joined before this script ran (Studio fast-start)
 for _, player in ipairs(Players:GetPlayers()) do
 	task.spawn(onPlayerAdded, player)
 end
